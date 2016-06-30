@@ -19,8 +19,8 @@ final class ExtensionsTest: XCTestCase {
     }
 
     func testArrayChunksPerformance() {
-        measureMetrics([XCTPerformanceMetric_WallClockTime], automaticallyStartMeasuring: false, forBlock: { () -> Void in
-            let message = Array<UInt8>(count: 1024 * 1024, repeatedValue: 7)
+        measureMetrics([XCTPerformanceMetric_WallClockTime], automaticallyStartMeasuring: false, for: { () -> Void in
+            let message = Array<UInt8>(repeating: 7, count: 1024 * 1024)
             self.startMeasuring()
             message.chunks(AES.blockSize)
             self.stopMeasuring()
@@ -86,8 +86,8 @@ final class ExtensionsTest: XCTestCase {
     }
 
     func test_NSData_init() {
-        let data = NSData(bytes: [0x01, 0x02, 0x03])
-        XCTAssert(data.length == 3, "Invalid data")
+        let data = Data(bytes: [0x01, 0x02, 0x03])
+        XCTAssert(data.count == 3, "Invalid data")
     }
 
     func test_String_encrypt_base64() {

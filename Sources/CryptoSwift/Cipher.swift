@@ -6,9 +6,9 @@
 //  Copyright © 2016 Marcin Krzyzanowski. All rights reserved.
 //
 
-public enum CipherError: ErrorType {
-    case Encrypt
-    case Decrypt
+public enum CipherError: ErrorProtocol {
+    case encrypt
+    case decrypt
 }
 
 public protocol Cipher {
@@ -16,11 +16,11 @@ public protocol Cipher {
     ///
     /// - parameter bytes: Plaintext data
     /// - returns: Encrypted data
-    func encrypt(bytes: Array<UInt8>) throws -> Array<UInt8>
+    func encrypt(_ bytes: Array<UInt8>) throws -> Array<UInt8>
 
     /// Decrypt given bytes at once
     ///
     /// - parameter bytes: Ciphertext data
     /// - returns: Plaintext data
-    func decrypt(bytes: Array<UInt8>) throws -> Array<UInt8>
+    func decrypt(_ bytes: Array<UInt8>) throws -> Array<UInt8>
 }

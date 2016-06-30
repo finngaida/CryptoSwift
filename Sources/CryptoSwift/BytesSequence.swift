@@ -6,19 +6,25 @@
 //  Copyright © 2015 Marcin Krzyzanowski. All rights reserved.
 //
 
-struct BytesSequence: SequenceType {
+struct BytesSequence: Sequence {
     let chunkSize: Int
     let data: Array<UInt8>
     
-    func generate() -> AnyGenerator<ArraySlice<UInt8>> {
+    func makeIterator() -> AnyIterator<ArraySlice<UInt8>> {
         
         var offset:Int = 0
         
-        return AnyGenerator {
-            let end = min(self.chunkSize, self.data.count - offset)
-            let result = self.data[offset..<offset + end]
-            offset += result.count
-            return !result.isEmpty ? result : nil
+        return AnyIterator {
+            let end = self.data.count - offset
+            if self.chunkSize > end {
+                let result = self.data[offset..<offset + end]
+                offset += result.count
+                return !result.isEmpty ? result : nil
+            } else {
+                let result = self.data[offset..<offset + self.chunkSize]
+                offset += result.count
+                return !result.isEmpty ? result : nil
+            }
         }
     }
 }

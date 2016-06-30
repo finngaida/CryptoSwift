@@ -10,47 +10,51 @@
 extension String {
     
     public func md5() -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).md5().toHexString()
+        return self.bytes().md5().toHexString()
     }
     
     public func sha1() -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).sha1().toHexString()
+        return self.bytes().sha1().toHexString()
     }
 
     public func sha224() -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).sha224().toHexString()
+        return self.bytes().sha224().toHexString()
     }
 
     public func sha256() -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).sha256().toHexString()
+        return self.bytes().sha256().toHexString()
     }
 
     public func sha384() -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).sha384().toHexString()
+        return self.bytes().sha384().toHexString()
     }
 
     public func sha512() -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).sha512().toHexString()
+        return self.bytes().sha512().toHexString()
     }
 
-    public func crc32(seed: UInt32? = nil, reflect : Bool = true) -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).crc32(seed, reflect: reflect).toHexString()
+    public func crc32(_ seed: UInt32? = nil, reflect : Bool = true) -> String {
+        return self.bytes().crc32(seed, reflect: reflect).toHexString()
     }
 
-    public func crc16(seed: UInt16? = nil) -> String {
-        return self.utf8.lazy.map({ $0 as UInt8 }).crc16(seed).toHexString()
+    public func crc16(_ seed: UInt16? = nil) -> String {
+        return self.bytes().crc16(seed).toHexString()
     }
 
-    public func encrypt(cipher: Cipher) throws -> Array<UInt8> {
-        return try self.utf8.lazy.map({ $0 as UInt8 }).encrypt(cipher)
+    public func encrypt(_ cipher: Cipher) throws -> Array<UInt8> {
+        return try self.bytes().encrypt(cipher)
     }
 
-    public func decrypt(cipher: Cipher) throws -> Array<UInt8> {
-        return try self.utf8.lazy.map({ $0 as UInt8 }).decrypt(cipher)
+    public func decrypt(_ cipher: Cipher) throws -> Array<UInt8> {
+        return try self.bytes().decrypt(cipher)
     }
     
     /// Returns hex string of bytes.
-    public func authenticate(authenticator: Authenticator) throws -> String {
-        return  try self.utf8.lazy.map({ $0 as UInt8 }).authenticate(authenticator).toHexString()
+    public func authenticate(_ authenticator: Authenticator) throws -> String {
+        return  try self.bytes().authenticate(authenticator).toHexString()
+    }
+    
+    public func bytes() -> Array<UInt8> {
+        return self.utf8.lazy.map({ $0 as UInt8 })
     }
 }

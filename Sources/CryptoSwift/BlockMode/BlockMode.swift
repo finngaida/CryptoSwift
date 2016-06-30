@@ -9,38 +9,38 @@
 typealias CipherOperationOnBlock = (block: Array<UInt8>) -> Array<UInt8>?
 
 public enum BlockMode {
-    case ECB, CBC, PCBC, CFB, OFB, CTR
+    case ecb, cbc, pcbc, cfb, ofb, ctr
 
-    func worker(iv: Array<UInt8>?, cipherOperation: CipherOperationOnBlock) -> BlockModeWorker {
+    func worker(_ iv: Array<UInt8>?, cipherOperation: CipherOperationOnBlock) -> BlockModeWorker {
         switch (self) {
-        case ECB:
+        case ecb:
             return ECBModeWorker(iv: iv ?? [], cipherOperation: cipherOperation)
-        case CBC:
+        case cbc:
             return CBCModeWorker(iv: iv ?? [], cipherOperation: cipherOperation)
-        case PCBC:
+        case pcbc:
             return PCBCModeWorker(iv: iv ?? [], cipherOperation: cipherOperation)
-        case CFB:
+        case cfb:
             return CFBModeWorker(iv: iv ?? [], cipherOperation: cipherOperation)
-        case OFB:
+        case ofb:
             return OFBModeWorker(iv: iv ?? [], cipherOperation: cipherOperation)
-        case CTR:
+        case ctr:
             return CTRModeWorker(iv: iv ?? [], cipherOperation: cipherOperation)
         }
     }
 
     var options: BlockModeOptions {
         switch (self) {
-        case .ECB:
+        case .ecb:
             return .PaddingRequired
-        case .CBC:
+        case .cbc:
             return [.InitializationVectorRequired, .PaddingRequired]
-        case .CFB:
+        case .cfb:
             return .InitializationVectorRequired
-        case .CTR:
+        case .ctr:
             return .InitializationVectorRequired
-        case .OFB:
+        case .ofb:
             return .InitializationVectorRequired
-        case .PCBC:
+        case .pcbc:
             return [.InitializationVectorRequired, .PaddingRequired]
         }
     }

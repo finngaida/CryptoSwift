@@ -19,9 +19,9 @@ public extension PKCS5 {
     ///          DK = PBKDF2(PRF, Password, Salt, c, dkLen)
     public struct PBKDF2 {
 
-        public enum Error: ErrorType {
-            case InvalidInput
-            case DerivedKeyTooLong
+        public enum Error: ErrorProtocol {
+            case invalidInput
+            case derivedKeyTooLong
         }
 
         private let salt: Array<UInt8>   // S
@@ -39,14 +39,14 @@ public extension PKCS5 {
             precondition(iterations > 0)
             
             guard let prf = HMAC(key: password, variant: variant) where iterations > 0 && !password.isEmpty && !salt.isEmpty else {
-                throw Error.InvalidInput
+                throw Error.invalidInput
             }
 
             self.dkLen = keyLength ?? variant.size
             let keyLengthFinal = Double(self.dkLen)
             let hLen = Double(prf.variant.size)
             if keyLengthFinal > (pow(2,32) - 1) * hLen {
-                throw Error.DerivedKeyTooLong
+                throw Error.derivedKeyTooLong
             }
 
             self.salt = salt
@@ -61,7 +61,7 @@ public extension PKCS5 {
             for i in 1...self.numBlocks {
                 // for each block T_i = U_1 ^ U_2 ^ ... ^ U_iter
                 if let value = calculateBlock(salt: self.salt, blockNum: i) {
-                    ret.appendContentsOf(value)
+                    ret.append(contentsOf: value)
                 }
             }
             return Array(ret.prefix(self.dkLen))
@@ -70,8 +70,8 @@ public extension PKCS5 {
 }
 
 private extension PKCS5.PBKDF2 {
-    private func INT(i: UInt) -> Array<UInt8> {
-        var inti = Array<UInt8>(count: 4, repeatedValue: 0)
+    private func INT(_ i: UInt) -> Array<UInt8> {
+        var inti = Array<UInt8>(repeating: 0, count: 4)
         inti[0] = UInt8((i >> 24) & 0xFF)
         inti[1] = UInt8((i >> 16) & 0xFF)
         inti[2] = UInt8((i >> 8) & 0xFF)
@@ -81,7 +81,7 @@ private extension PKCS5.PBKDF2 {
 
     // F (P, S, c, i) = U_1 \xor U_2 \xor ... \xor U_c
     // U_1 = PRF (P, S || INT (i))
-    private func calculateBlock(salt salt: Array<UInt8>, blockNum: UInt) -> Array<UInt8>? {
+    private func calculateBlock(salt: Array<UInt8>, blockNum: UInt) -> Array<UInt8>? {
         guard let u1 = prf.authenticate(salt + INT(blockNum)) else {
             return nil
         }

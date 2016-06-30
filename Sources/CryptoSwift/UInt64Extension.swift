@@ -8,16 +8,16 @@
 
 /** array of bytes */
 extension UInt64 {
-    public func bytes(totalBytes: Int = sizeof(UInt64)) -> Array<UInt8> {
+    public func bytes(_ totalBytes: Int = sizeof(UInt64)) -> Array<UInt8> {
         return arrayOfBytes(self, length: totalBytes)
     }
 
-    public static func withBytes(bytes: ArraySlice<UInt8>) -> UInt64 {
+    public static func withBytes(_ bytes: ArraySlice<UInt8>) -> UInt64 {
         return UInt64.withBytes(Array(bytes))
     }
 
     /** Int with array bytes (little-endian) */
-    public static func withBytes(bytes: Array<UInt8>) -> UInt64 {
+    public static func withBytes(_ bytes: Array<UInt8>) -> UInt64 {
         return integerWithBytes(bytes)
     }
 }
